@@ -39,7 +39,8 @@ contract NFTERC721A is Ownable, ERC721A, PaymentSplitter {
     uint public saleStartTime = 1646737200;
 
     mapping(address => uint) public amountNFTsperWalletWhitelistSale;
-
+    mapping(address => uint) public amountNFTsperPUBLICSale;
+    
     uint private teamLength;
 
     constructor(address[] memory _team, uint[] memory _teamShares, bytes32 _merkleRoot, string memory _baseURI) ERC721A("Nom de la collection", "SYMBOL")
@@ -61,7 +62,7 @@ contract NFTERC721A is Ownable, ERC721A, PaymentSplitter {
         require(currentTime() < saleStartTime + 300 minutes, "Whitelist Sale is finished");
         require(sellingStep == Step.WhitelistSale, "Whitelist sale is not activated");
         require(isWhiteListed(msg.sender, _proof), "Not whitelisted");
-        require(amountNFTsperWalletWhitelistSale[msg.sender] + _quantity <= 1, "You can only get 1 NFT on the Whitelist Sale");
+        require(amountNFTsperWalletWhitelistSale[msg.sender] + _quantity <= 5, "You can only get 1 NFT on the Whitelist Sale");
         require(totalSupply() + _quantity <= MAX_WHITELIST, "Max supply exceeded");
         require(msg.value >= price * _quantity, "Not enought funds");
         amountNFTsperWalletWhitelistSale[msg.sender] += _quantity;
@@ -72,6 +73,7 @@ contract NFTERC721A is Ownable, ERC721A, PaymentSplitter {
         uint price = publicSalePrice;
         require(price != 0, "Price is 0");
         require(sellingStep == Step.PublicSale, "Public sale is not activated");
+        require(amountNFTsperPUBLICSale[msg.sender] + _quantity <= 10, "You can only get 1 NFT on the PUBLIC Sale");
         require(totalSupply() + _quantity <= MAX_WHITELIST + MAX_PUBLIC, "Max supply exceeded");
         require(msg.value >= price * _quantity, "Not enought funds");
         _safeMint(_account, _quantity);
