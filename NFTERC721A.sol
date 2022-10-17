@@ -98,9 +98,9 @@ contract NFT is ERC721Enumerable, Ownable {
         return notRevealedUri;
     }
 
-    string memory currenturiPrefix = _uriPrefix();
-    return bytes(currenturiPrefix).length > 0
-        ? string(abi.encodePacked(currenturiPrefix, tokenId.toString(), baseExtension))
+    string memory currentBaseURI = _baseURI();
+    return bytes(currentBaseURI).length > 0
+        ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), baseExtension))
         : "";
   }
 
